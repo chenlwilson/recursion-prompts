@@ -262,7 +262,24 @@ var buildList = function(value, length) {
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
 var fizzBuzz = function(n) {
+	var arr = [];
+	if (n <= 0) {
+		return arr;
+	} else if (n % 3 === 0 && n % 5 === 0) {
+		arr.push("FizzBuzz");
+		return fizzBuzz(n-1).concat(arr);
+	} else if (n % 5 === 0 ) {
+		arr.push("Buzz");
+		return fizzBuzz(n-1).concat(arr);
+	} else if (n % 3 === 0 ) {
+		arr.push("Fizz");
+		return fizzBuzz(n-1).concat(arr);
+	} else {
+		arr.push(n.toString());
+		return fizzBuzz(n-1).concat(arr);
+	}
 };
+
 
 // 20. Count the occurence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
@@ -280,13 +297,31 @@ var countOccurrence = function(array, value) {
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
 var rMap = function(array, callback) {
+	var result = [];
+	if (array.length < 1) {
+		return result;
+	} else {
+		result.push(callback(array[0]));
+		return result.concat(rMap(array.slice(1), callback));
+	}
 };
 
 // 22. Write a function that counts the number of times a key occurs in an object.
 // var obj = {'e':{'x':'y'},'t':{'r':{'e':'r'},'p':{'y':'r'}},'y':'e'};
-// countKeysInObj(obj, 'r') // 1
-// countKeysInObj(obj, 'e') // 2
+// countKeysInObj({'r':'e'}, 'r') // 1
+// countKeysInObj({'r':{'a':'e'}, 'a') // 1
 var countKeysInObj = function(obj, key) {
+	// countKeysInObj(obj, 'e') // 2
+	var count = 0;
+	for (var prop in obj) {
+		if (prop === key) {
+			count++;
+		}
+		if (typeof obj[prop] === "object") {
+			count += countKeysInObj(obj[prop], key);
+		}
+	}
+	return count;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
@@ -294,11 +329,31 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+	var count = 0;
+	for (var key in obj) {
+		if (obj[key] === value) {
+			count ++;
+		}
+		if (typeof obj[key] === "object") {
+			count += countValuesInObj(obj[key], value);
+		}
+	}
+	return count;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+	for (var key in obj) {
+		if (key === oldKey) {
+			obj[newKey] = obj[oldKey];
+			delete obj[oldKey];
+		}
+		if (typeof obj[key] === "object") {
+			replaceKeysInObj(obj[key], oldKey, newKey);
+		}
+	}
+	return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
