@@ -90,6 +90,13 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+	if (exp === 0) {
+		return 1;
+	} else if (exp > 0) {
+		return base * exponent(base, exp - 1);
+	} else if (exp < 0) {
+		return 1 / (base * exponent(base, -1 - exp));
+	}
 };
 
 // 8. Determine if a number is a power of two.
@@ -97,14 +104,35 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+	if (n === 1) {
+		return true;
+	} else if (n >= 0 && n < 2) {
+		return false;
+	} else {
+		return powerOfTwo(n / 2);
+	}
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+	var reversedStr = "";
+	if (string.length === 0) {
+		return reversedStr;
+	} else {
+		reversedStr += string.charAt(string.length - 1);
+		return reversedStr + reverse(string.slice(0, string.length - 1));
+	}
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+	if (string.length === 1) {
+		return true;
+	}
+	if (string.length > 0 && string.charAt(0).toLowerCase() === string.charAt(string.length - 1).toLowerCase()) {
+		return true && palindrome(string.slice(1, length-1));
+	}
+	return false;
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -113,16 +141,52 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
-};
+	if (y === 0) {
+		return NaN;
+	}
+	if (x < 0) {
+		return -modulo(-x, y);
+	} 
+	if (y < 0) {
+		return modulo(x, -y);
+	} 
+	if (x < y) {
+		return x; 
+	}
+	return modulo(x - y, y);
+}
+	
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+	if (x === 0 || y === 0) {
+		return 0;
+	} else if (x > 0 && y > 0) {
+		return x + multiply(x, (y - 1));
+	} else if (x < 0 && y < 0) {
+		return -x + multiply(x, (y + 1));
+	} else if (x < 0 || y < 0) {
+		return -multiply(x, -y);
+	}
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
 var divide = function(x, y) {
+	if (y === 0) {
+		return NaN;
+	} else if (x - y < 0) {
+		return 0;
+	} else if (x < 0 && y < 0) {
+		return divide(-x, -y);
+	} else if (x < 0 && y > 0) {
+		return divide(-x, y);
+	} else if (x > 0 && y < 0) {
+		return divide(x, -y);
+	} else {
+		return divide(x - y, y) + 1;
+	}
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -131,6 +195,15 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
+	if (x <= 0 || y <= 0) {
+		return null;
+	} else if (y > x) {
+		return gcd(y, x);
+	} else if (x % y === 0) {
+		return y;
+	} else {
+		return gcd(y, x % y);
+	}
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
@@ -138,21 +211,49 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+	if (str1.charAt(0) === str2.charAt(0) && str1.length <= 1 && str1.length === str2.length) {
+		return true;
+	} else if (str1.charAt(0) === str2.charAt(0)) {
+		return true && compareStr(str1.slice(1), str2.slice(1));
+	} else {
+		return false;
+	}
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+	var arr = [];
+	if (str.length === 0) {
+		return arr;
+	} else {
+		arr.push(str.charAt(0));
+		return arr.concat(createArray(str.slice(1)));
+	}
 };
 
 // 17. Reverse the order of an array
 var reverseArr = function(array) {
+	var reversedArr = [];
+	if (array.length === 0) {
+		return reversedArr;
+	} else {
+		reversedArr.push(array[array.length - 1]);
+		return reversedArr.concat(reverseArr(array.slice(0, array.length - 1)));
+	}
 };
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
 var buildList = function(value, length) {
+	var arr = [];
+	if (length === 0) {
+		return arr;
+	} else {
+		arr.push(value);
+		return arr.concat(buildList(value, length - 1));
+	}
 };
 
 // 19. Implement FizzBuzz. Given integer n, return an array of the string representations of 1 to n.
@@ -167,6 +268,13 @@ var fizzBuzz = function(n) {
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
 var countOccurrence = function(array, value) {
+	if (array.length === 0) {
+		return 0;
+	} else if (array[0] === value) {
+		return countOccurrence(array.slice(1), value) + 1;
+	} else {
+		return countOccurrence(array.slice(1), value);
+	}
 };
 
 // 21. Write a recursive version of map.
