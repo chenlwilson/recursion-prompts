@@ -737,6 +737,21 @@ var binarySearch = function(array, target, min, max) {
 	} else {
 		return binarySearch(array, target, min, mid);
 	}
+
+	// var search = function(min, max) {
+	// 	var mid = Math.floor((max - min) / 2) + min;
+	// 	if (mid === min && target !== array[mid]) {
+	// 		return null;
+	// 	}
+	// 	if (target === array[mid]) {
+	// 		return mid;
+	// 	} else if (target > array[mid]) {
+	// 		return search(mid, max);
+	// 	} else {
+	// 		return search(min, mid);
+	// 	}
+	// }
+	// return search(0, array.length);
 };
 
 // 39. Write a merge sort function.
@@ -775,4 +790,23 @@ var merge = function(left, right) {
 // console.log(obj2); // {a:1,b:{bb:{bbb:2}},c:3}
 // obj1 === obj2 // false
 var clone = function(input) {
+	if (Array.isArray(input)) {
+		return input.map(function(item) {
+			if (typeof item === 'object') {
+				return clone(item);
+			} else {
+				return item;
+			}
+		});
+	} else {
+		var result = {};
+		for (var key in input) {
+			if (typeof input[key] === 'object') {
+				result[key] = clone(input[key]);
+			} else {
+				result[key] = input[key];
+			}
+		}
+		return result;
+	}
 };
